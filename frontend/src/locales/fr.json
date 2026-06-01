@@ -1,0 +1,243 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "saving": "Enregistrement...",
+    "error": "Erreur",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "cancel": "Annuler",
+    "actions": "Actions",
+    "noGroup": "Aucun",
+    "roles": {
+      "ADMIN": "Administrateur",
+      "TRAINER": "Formateur",
+      "TRAINEE": "Stagiaire"
+    },
+    "status": {
+      "PRESENT": "Présent",
+      "ABSENT": "Absent",
+      "LATE": "Retard"
+    },
+    "accessStatus": {
+      "ALLOWED": "Accès autorisé",
+      "BLOCKED": "Accès interdit"
+    },
+    "reviewStatus": {
+      "PENDING": "En attente",
+      "APPROVED": "Validé",
+      "REJECTED": "Refusé"
+    }
+  },
+  "theme": {
+    "light": "Clair",
+    "dark": "Sombre",
+    "switchToLight": "Passer au mode clair",
+    "switchToDark": "Passer au mode sombre"
+  },
+  "auth": {
+    "loginTitle": "Gestion des absences",
+    "loginSubtitle": "Connectez-vous pour accéder à la plateforme",
+    "emailLabel": "Email",
+    "emailPlaceholder": "vous@example.com",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "Votre mot de passe",
+    "loginButton": "Se connecter",
+    "loggingIn": "Connexion...",
+    "noAccount": "Pas de compte ?",
+    "registerLink": "S'inscrire",
+    "demoAccounts": "Comptes démo",
+    "demoPassword": "mot de passe",
+    "registerTitle": "Création de compte",
+    "registerSubtitle": "Inscription stagiaire",
+    "firstNameLabel": "Prénom",
+    "lastNameLabel": "Nom",
+    "registerButton": "S'inscrire",
+    "registering": "Inscription...",
+    "alreadyRegistered": "Déjà inscrit ?",
+    "loginLink": "Se connecter",
+    "errorFieldsRequired": "Tous les champs sont obligatoires",
+    "errorLoginFieldsRequired": "Email et mot de passe requis",
+    "errorLogin": "Erreur de connexion",
+    "errorRegister": "Erreur lors de l'inscription"
+  },
+  "layout": {
+    "title": "Gestion des absences",
+    "logout": "Déconnexion",
+    "sidebar": {
+      "dashboard": "Tableau de bord",
+      "traineeSection": "Stagiaire",
+      "profile": "Profil",
+      "myAttendance": "Mes présences",
+      "adminSection": "Admin",
+      "trainerSection": "Formateur",
+      "trainees": "Stagiaires",
+      "groups": "Groupes",
+      "validations": "Validations",
+      "attendance": "Présences",
+      "stats": "Statistiques"
+    },
+    "statsBar": {
+      "presents": "Présences",
+      "absences": "Absences",
+      "lates": "Retards",
+      "attendanceRate": "Taux de présence"
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bienvenue {{name}}",
+    "cards": {
+      "presents": "Présences",
+      "absences": "Absences",
+      "attendanceRate": "Taux de présence"
+    },
+    "quickStats": {
+      "title": "Vue rapide des statistiques globales",
+      "subtitle": "Consultez le détail dans l'onglet Statistiques.",
+      "traineeCount": "Nombre de stagiaires",
+      "groupCount": "Nombre de groupes",
+      "daysRecorded": "Jours de présence enregistrés"
+    },
+    "traineeSummary": {
+      "title": "Résumé de mes présences",
+      "subtitle": "Consultez la page Mes présences pour voir votre historique complet."
+    }
+  },
+  "profile": {
+    "title": "Mon profil",
+    "fullName": "Nom complet",
+    "email": "Email",
+    "role": "Rôle"
+  },
+  "studentAttendance": {
+    "title": "Mes présences",
+    "subtitle": "Historique de vos présences, absences et retards.",
+    "emptyMessage": "Aucune présence enregistrée.",
+    "columns": {
+      "date": "Date",
+      "status": "Statut",
+      "group": "Groupe",
+      "arrivalTime": "Heure d'arrivée"
+      ,"certificate": "Justificatif"
+    }
+    ,"uploadCertificate": "Uploader un certificat",
+    "certificateUploaded": "Certificat envoyé, en attente de validation administrative."
+  },
+  "trainees": {
+    "title": "Gestion des stagiaires",
+    "listTitle": "Liste",
+    "emptyMessage": "Aucun stagiaire.",
+    "addTitle": "Ajouter un stagiaire",
+    "editTitle": "Modifier un stagiaire",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "Email",
+    "password": "Mot de passe",
+    "passwordHint": "(laisser vide pour ne pas changer)",
+    "group": "Groupe",
+    "accessStatus": "Statut d'accès",
+    "errorRequired": "Nom, prénom et email sont obligatoires",
+    "errorPasswordRequired": "Mot de passe requis pour la création",
+    "errorSave": "Erreur de sauvegarde",
+    "errorLoad": "Erreur de chargement",
+    "errorDelete": "Erreur de suppression",
+    "confirmDelete": "Supprimer ce stagiaire ?",
+    "columns": {
+      "lastName": "Nom",
+      "firstName": "Prénom",
+      "email": "Email",
+      "group": "Groupe",
+      "accessStatus": "Accès"
+    }
+  },
+  "approvals": {
+    "title": "Validations administratives",
+    "subtitle": "Validez les nouveaux comptes, attribuez les rôles et contrôlez les justificatifs.",
+    "accountsTitle": "Comptes suspendus",
+    "certificatesTitle": "Justificatifs à valider",
+    "emptyAccounts": "Aucun compte suspendu.",
+    "emptyCertificates": "Aucun justificatif en attente.",
+    "actions": {
+      "approve": "Valider",
+      "reject": "Refuser"
+    },
+    "messages": {
+      "userUpdated": "Compte mis à jour.",
+      "certificateUpdated": "Justificatif mis à jour."
+    }
+  },
+  "groups": {
+    "title": "Groupes",
+    "listTitle": "Liste",
+    "emptyMessage": "Aucun groupe.",
+    "addTitle": "Ajouter un groupe",
+    "editTitle": "Modifier un groupe",
+    "name": "Nom",
+    "description": "Description",
+    "errorRequired": "Le nom est obligatoire",
+    "errorSave": "Erreur de sauvegarde",
+    "errorLoad": "Erreur de chargement",
+    "errorDelete": "Erreur de suppression",
+    "confirmDelete": "Supprimer ce groupe ?",
+    "columns": {
+      "name": "Nom",
+      "description": "Description",
+      "traineeCount": "Nb stagiaires"
+    }
+  },
+  "attendance": {
+    "title": "Enregistrement des présences",
+    "filters": {
+      "date": "Date",
+      "group": "Groupe",
+      "selectGroup": "Sélectionner un groupe",
+      "from": "Du",
+      "to": "Au"
+    },
+    "table": {
+      "trainee": "Stagiaire",
+      "status": "Statut",
+      "arrivalTime": "Heure d'arrivée"
+    },
+    "actions": {
+      "save": "Enregistrer les présences",
+      "saving": "Enregistrement...",
+      "export": "Export CSV"
+    },
+    "messages": {
+      "saved": "Présences enregistrées",
+      "saveError": "Erreur lors de l'enregistrement"
+    },
+    "history": {
+      "title": "Historique des présences",
+      "empty": "Aucune présence trouvée.",
+      "columns": {
+        "date": "Date",
+        "trainee": "Stagiaire",
+        "group": "Groupe",
+        "status": "Statut",
+        "arrivalTime": "Heure d'arrivée"
+      }
+    }
+  },
+  "stats": {
+    "title": "Statistiques",
+    "empty": "Aucune donnée disponible.",
+    "filters": {
+      "from": "Du",
+      "to": "Au",
+      "group": "Groupe",
+      "allGroups": "Tous les groupes"
+    },
+    "actions": {
+      "exportCsv": "Export CSV",
+      "exportPdf": "Export PDF"
+    },
+    "charts": {
+      "traineeRate": "Taux de présence par stagiaire",
+      "groupRate": "Taux de présence par groupe",
+      "dateRate": "Taux de présence par date",
+      "rateName": "Taux de présence (%)"
+    }
+  }
+}

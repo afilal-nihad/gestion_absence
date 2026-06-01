@@ -1,0 +1,243 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "error": "Error",
+    "save": "Save",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "actions": "Actions",
+    "noGroup": "None",
+    "roles": {
+      "ADMIN": "Administrator",
+      "TRAINER": "Trainer",
+      "TRAINEE": "Trainee"
+    },
+    "status": {
+      "PRESENT": "Present",
+      "ABSENT": "Absent",
+      "LATE": "Late"
+    },
+    "accessStatus": {
+      "ALLOWED": "Access allowed",
+      "BLOCKED": "Access blocked"
+    },
+    "reviewStatus": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected"
+    }
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode"
+  },
+  "auth": {
+    "loginTitle": "Absence Management",
+    "loginSubtitle": "Log in to access the platform",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Your password",
+    "loginButton": "Log In",
+    "loggingIn": "Connecting...",
+    "noAccount": "Don't have an account?",
+    "registerLink": "Register",
+    "demoAccounts": "Demo accounts",
+    "demoPassword": "password",
+    "registerTitle": "Create Account",
+    "registerSubtitle": "Trainee Registration",
+    "firstNameLabel": "First Name",
+    "lastNameLabel": "Last Name",
+    "registerButton": "Register",
+    "registering": "Registering...",
+    "alreadyRegistered": "Already registered?",
+    "loginLink": "Log in",
+    "errorFieldsRequired": "All fields are required",
+    "errorLoginFieldsRequired": "Email and password are required",
+    "errorLogin": "Login error",
+    "errorRegister": "Registration error"
+  },
+  "layout": {
+    "title": "Absence Management",
+    "logout": "Log Out",
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "traineeSection": "Trainee",
+      "profile": "Profile",
+      "myAttendance": "My Attendance",
+      "adminSection": "Admin",
+      "trainerSection": "Trainer",
+      "trainees": "Trainees",
+      "groups": "Groups",
+      "validations": "Approvals",
+      "attendance": "Attendance",
+      "stats": "Statistics"
+    },
+    "statsBar": {
+      "presents": "Presents",
+      "absences": "Absences",
+      "lates": "Lates",
+      "attendanceRate": "Attendance Rate"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome {{name}}",
+    "cards": {
+      "presents": "Presents",
+      "absences": "Absences",
+      "attendanceRate": "Attendance Rate"
+    },
+    "quickStats": {
+      "title": "Quick Global Stats",
+      "subtitle": "View details in the Statistics tab.",
+      "traineeCount": "Number of Trainees",
+      "groupCount": "Number of Groups",
+      "daysRecorded": "Recorded Attendance Days"
+    },
+    "traineeSummary": {
+      "title": "My attendance summary",
+      "subtitle": "Use the My Attendance page to review your full history."
+    }
+  },
+  "profile": {
+    "title": "My Profile",
+    "fullName": "Full Name",
+    "email": "Email",
+    "role": "Role"
+  },
+  "studentAttendance": {
+    "title": "My Attendance",
+    "subtitle": "History of your presence, absence, and lateness.",
+    "emptyMessage": "No attendance recorded.",
+    "columns": {
+      "date": "Date",
+      "status": "Status",
+      "group": "Group",
+      "arrivalTime": "Arrival Time"
+      ,"certificate": "Certificate"
+    }
+    ,"uploadCertificate": "Upload certificate",
+    "certificateUploaded": "Certificate uploaded and waiting for admin review."
+  },
+  "trainees": {
+    "title": "Trainee Management",
+    "listTitle": "List",
+    "emptyMessage": "No trainees.",
+    "addTitle": "Add Trainee",
+    "editTitle": "Edit Trainee",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "password": "Password",
+    "passwordHint": "(leave blank to keep unchanged)",
+    "group": "Group",
+    "accessStatus": "Access status",
+    "errorRequired": "First name, last name, and email are required",
+    "errorPasswordRequired": "Password is required for creation",
+    "errorSave": "Error saving",
+    "errorLoad": "Error loading",
+    "errorDelete": "Error deleting",
+    "confirmDelete": "Delete this trainee?",
+    "columns": {
+      "lastName": "Last Name",
+      "firstName": "First Name",
+      "email": "Email",
+      "group": "Group",
+      "accessStatus": "Access"
+    }
+  },
+  "approvals": {
+    "title": "Administrative approvals",
+    "subtitle": "Approve new accounts, assign roles, and review absence certificates.",
+    "accountsTitle": "Suspended accounts",
+    "certificatesTitle": "Certificates pending review",
+    "emptyAccounts": "No suspended account.",
+    "emptyCertificates": "No certificate pending review.",
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject"
+    },
+    "messages": {
+      "userUpdated": "Account updated.",
+      "certificateUpdated": "Certificate updated."
+    }
+  },
+  "groups": {
+    "title": "Groups",
+    "listTitle": "List",
+    "emptyMessage": "No groups.",
+    "addTitle": "Add Group",
+    "editTitle": "Edit Group",
+    "name": "Name",
+    "description": "Description",
+    "errorRequired": "Name is required",
+    "errorSave": "Error saving",
+    "errorLoad": "Error loading",
+    "errorDelete": "Error deleting",
+    "confirmDelete": "Delete this group?",
+    "columns": {
+      "name": "Name",
+      "description": "Description",
+      "traineeCount": "No. of Trainees"
+    }
+  },
+  "attendance": {
+    "title": "Attendance Recording",
+    "filters": {
+      "date": "Date",
+      "group": "Group",
+      "selectGroup": "Select a group",
+      "from": "From",
+      "to": "To"
+    },
+    "table": {
+      "trainee": "Trainee",
+      "status": "Status",
+      "arrivalTime": "Arrival Time"
+    },
+    "actions": {
+      "save": "Record Attendance",
+      "saving": "Saving...",
+      "export": "Export CSV"
+    },
+    "messages": {
+      "saved": "Attendance recorded",
+      "saveError": "Error recording attendance"
+    },
+    "history": {
+      "title": "Attendance History",
+      "empty": "No attendance found.",
+      "columns": {
+        "date": "Date",
+        "trainee": "Trainee",
+        "group": "Group",
+        "status": "Status",
+        "arrivalTime": "Arrival Time"
+      }
+    }
+  },
+  "stats": {
+    "title": "Statistics",
+    "empty": "No data available.",
+    "filters": {
+      "from": "From",
+      "to": "To",
+      "group": "Group",
+      "allGroups": "All groups"
+    },
+    "actions": {
+      "exportCsv": "Export CSV",
+      "exportPdf": "Export PDF"
+    },
+    "charts": {
+      "traineeRate": "Attendance Rate by Trainee",
+      "groupRate": "Attendance Rate by Group",
+      "dateRate": "Attendance Rate by Date",
+      "rateName": "Attendance Rate (%)"
+    }
+  }
+}

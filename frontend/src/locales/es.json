@@ -1,0 +1,243 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "saving": "Guardando...",
+    "error": "Error",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "actions": "Acciones",
+    "noGroup": "Ninguno",
+    "roles": {
+      "ADMIN": "Administrador",
+      "TRAINER": "Formador",
+      "TRAINEE": "Estudiante"
+    },
+    "status": {
+      "PRESENT": "Presente",
+      "ABSENT": "Ausente",
+      "LATE": "Tarde"
+    },
+    "accessStatus": {
+      "ALLOWED": "Acceso autorizado",
+      "BLOCKED": "Acceso bloqueado"
+    },
+    "reviewStatus": {
+      "PENDING": "Pendiente",
+      "APPROVED": "Aprobado",
+      "REJECTED": "Rechazado"
+    }
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Oscuro",
+    "switchToLight": "Cambiar al modo claro",
+    "switchToDark": "Cambiar al modo oscuro"
+  },
+  "auth": {
+    "loginTitle": "Gestión de Ausencias",
+    "loginSubtitle": "Inicie sesión para acceder a la plataforma",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "usuario@example.com",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Su contraseña",
+    "loginButton": "Iniciar Sesión",
+    "loggingIn": "Conectando...",
+    "noAccount": "¿No tiene una cuenta?",
+    "registerLink": "Registrarse",
+    "demoAccounts": "Cuentas de demostración",
+    "demoPassword": "contraseña",
+    "registerTitle": "Crear Cuenta",
+    "registerSubtitle": "Registro de Estudiante",
+    "firstNameLabel": "Nombre",
+    "lastNameLabel": "Apellido",
+    "registerButton": "Registrarse",
+    "registering": "Registrando...",
+    "alreadyRegistered": "¿Ya registrado?",
+    "loginLink": "Iniciar sesión",
+    "errorFieldsRequired": "Todos los campos son obligatorios",
+    "errorLoginFieldsRequired": "Correo electrónico y contraseña requeridos",
+    "errorLogin": "Error de inicio de sesión",
+    "errorRegister": "Error al registrarse"
+  },
+  "layout": {
+    "title": "Gestión de Ausencias",
+    "logout": "Cerrar Sesión",
+    "sidebar": {
+      "dashboard": "Tablero",
+      "traineeSection": "Estudiante",
+      "profile": "Perfil",
+      "myAttendance": "Mis Asistencias",
+      "adminSection": "Admin",
+      "trainerSection": "Formador",
+      "trainees": "Estudiantes",
+      "groups": "Grupos",
+      "validations": "Validaciones",
+      "attendance": "Asistencia",
+      "stats": "Estadísticas"
+    },
+    "statsBar": {
+      "presents": "Asistencias",
+      "absences": "Ausencias",
+      "lates": "Tardanzas",
+      "attendanceRate": "Tasa de Asistencia"
+    }
+  },
+  "dashboard": {
+    "title": "Tablero",
+    "welcome": "Bienvenido {{name}}",
+    "cards": {
+      "presents": "Asistencias",
+      "absences": "Ausencias",
+      "attendanceRate": "Tasa de Asistencia"
+    },
+    "quickStats": {
+      "title": "Vista rápida de estadísticas globales",
+      "subtitle": "Consulte los detalles en la pestaña Estadísticas.",
+      "traineeCount": "Número de Estudiantes",
+      "groupCount": "Número de Grupos",
+      "daysRecorded": "Días de Asistencia Registrados"
+    },
+    "traineeSummary": {
+      "title": "Resumen de mis asistencias",
+      "subtitle": "Use la página Mis Asistencias para revisar su historial completo."
+    }
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "fullName": "Nombre completo",
+    "email": "Correo electrónico",
+    "role": "Rol"
+  },
+  "studentAttendance": {
+    "title": "Mis Asistencias",
+    "subtitle": "Historial de sus asistencias, ausencias y tardanzas.",
+    "emptyMessage": "No hay asistencias registradas.",
+    "columns": {
+      "date": "Fecha",
+      "status": "Estado",
+      "group": "Grupo",
+      "arrivalTime": "Hora de llegada"
+      ,"certificate": "Justificante"
+    }
+    ,"uploadCertificate": "Subir justificante",
+    "certificateUploaded": "Justificante enviado, pendiente de validación administrativa."
+  },
+  "trainees": {
+    "title": "Gestión de Estudiantes",
+    "listTitle": "Lista",
+    "emptyMessage": "No hay estudiantes.",
+    "addTitle": "Añadir Estudiante",
+    "editTitle": "Modificar Estudiante",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordHint": "(dejar en blanco para no cambiar)",
+    "group": "Grupo",
+    "accessStatus": "Estado de acceso",
+    "errorRequired": "Nombre, apellido y correo electrónico son obligatorios",
+    "errorPasswordRequired": "Contraseña requerida para la creación",
+    "errorSave": "Error al guardar",
+    "errorLoad": "Error al cargar",
+    "errorDelete": "Error al eliminar",
+    "confirmDelete": "¿Eliminar este estudiante?",
+    "columns": {
+      "lastName": "Apellido",
+      "firstName": "Nombre",
+      "email": "Correo electrónico",
+      "group": "Grupo",
+      "accessStatus": "Acceso"
+    }
+  },
+  "approvals": {
+    "title": "Validaciones administrativas",
+    "subtitle": "Valide nuevas cuentas, asigne roles y revise justificantes de ausencia.",
+    "accountsTitle": "Cuentas suspendidas",
+    "certificatesTitle": "Justificantes pendientes",
+    "emptyAccounts": "No hay cuentas suspendidas.",
+    "emptyCertificates": "No hay justificantes pendientes.",
+    "actions": {
+      "approve": "Aprobar",
+      "reject": "Rechazar"
+    },
+    "messages": {
+      "userUpdated": "Cuenta actualizada.",
+      "certificateUpdated": "Justificante actualizado."
+    }
+  },
+  "groups": {
+    "title": "Grupos",
+    "listTitle": "Lista",
+    "emptyMessage": "No hay grupos.",
+    "addTitle": "Añadir Grupo",
+    "editTitle": "Modificar Grupo",
+    "name": "Nombre",
+    "description": "Descripción",
+    "errorRequired": "El nombre es obligatorio",
+    "errorSave": "Error al guardar",
+    "errorLoad": "Error al cargar",
+    "errorDelete": "Error al eliminar",
+    "confirmDelete": "¿Eliminar este grupo?",
+    "columns": {
+      "name": "Nombre",
+      "description": "Descripción",
+      "traineeCount": "Nº de Estudiantes"
+    }
+  },
+  "attendance": {
+    "title": "Registro de Asistencias",
+    "filters": {
+      "date": "Fecha",
+      "group": "Grupo",
+      "selectGroup": "Seleccionar un grupo",
+      "from": "Desde",
+      "to": "Hasta"
+    },
+    "table": {
+      "trainee": "Estudiante",
+      "status": "Estado",
+      "arrivalTime": "Hora de llegada"
+    },
+    "actions": {
+      "save": "Registrar Asistencias",
+      "saving": "Guardando...",
+      "export": "Exportar CSV"
+    },
+    "messages": {
+      "saved": "Asistencias registradas",
+      "saveError": "Error al registrar la asistencia"
+    },
+    "history": {
+      "title": "Historial de Asistencias",
+      "empty": "No se encontraron asistencias.",
+      "columns": {
+        "date": "Fecha",
+        "trainee": "Estudiante",
+        "group": "Grupo",
+        "status": "Estado",
+        "arrivalTime": "Hora de llegada"
+      }
+    }
+  },
+  "stats": {
+    "title": "Estadísticas",
+    "empty": "No hay datos disponibles.",
+    "filters": {
+      "from": "Desde",
+      "to": "Hasta",
+      "group": "Grupo",
+      "allGroups": "Todos los grupos"
+    },
+    "actions": {
+      "exportCsv": "Exportar CSV",
+      "exportPdf": "Exportar PDF"
+    },
+    "charts": {
+      "traineeRate": "Tasa de asistencia por estudiante",
+      "groupRate": "Tasa de asistencia por grupo",
+      "dateRate": "Tasa de asistencia por fecha",
+      "rateName": "Tasa de asistencia (%)"
+    }
+  }
+}
