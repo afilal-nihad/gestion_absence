@@ -65,6 +65,7 @@ function RegisterPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t('auth.emailPlaceholder')}
+              autoComplete="off"
               required
             />
           </label>
@@ -75,6 +76,7 @@ function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder={t('auth.passwordPlaceholder')}
+              autoComplete="new-password"
               required
             />
           </label>
@@ -95,4 +97,3 @@ function RegisterPage() {
 }
 
 export default RegisterPage;
-

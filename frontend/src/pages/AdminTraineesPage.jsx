@@ -185,6 +185,7 @@ function AdminTraineesPage() {
                   name="email"
                   value={form.email}
                   onChange={handleChange}
+                  autoComplete="off"
                   required
                 />
               </label>
@@ -195,6 +196,7 @@ function AdminTraineesPage() {
                   name="password"
                   value={form.password}
                   onChange={handleChange}
+                  autoComplete="new-password"
                 />
               </label>
               <label>

@@ -1348,3 +1348,19 @@ textarea:focus {
     padding: 1.35rem;
   }
 }
+
+/* Codes couleurs pour l'appel des stagiaires */
+.attendance-row-ok {
+  background-color: var(--theme-success-soft) !important;
+  border-left: 4px solid var(--theme-chart-success);
+}
+
+.attendance-row-warning {
+  background-color: var(--theme-warning-soft, rgba(245, 158, 11, 0.15)) !important;
+  border-left: 4px solid var(--theme-chart-warning);
+}
+
+.attendance-row-blocked {
+  background-color: var(--theme-danger-soft) !important;
+  border-left: 4px solid var(--theme-danger);
+}
