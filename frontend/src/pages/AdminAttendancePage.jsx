@@ -3,16 +3,26 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { useTranslation } from 'react-i18next';
 
+const TIME_SLOTS = ['08:30-11:00', '11:00-13:30', '13:30-16:00', '16:00-18:00'];
+
 function AdminAttendancePage() {
   const { token, user } = useAuth();
   const { t } = useTranslation();
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState('');
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
+  
   const [trainees, setTrainees] = useState([]);
+  const [selectedTrainees, setSelectedTrainees] = useState([]);
+  
+  const [bulkStatus, setBulkStatus] = useState('PRESENT');
+  const [bulkArrivalTime, setBulkArrivalTime] = useState('');
+
   const [history, setHistory] = useState([]);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -39,31 +49,15 @@ function AdminAttendancePage() {
       }
       try {
         const all = await api.get('/users/trainees', token);
-        const existingRows = selectedGroup && date
-          ? await api.get(`/attendance?group_id=${selectedGroup}&date=${date}`, token)
-          : [];
-        const existingByUserId = new Map(existingRows.map((row) => [Number(row.user_id), row]));
         setTrainees(
-          all
-            .filter((tData) => String(tData.group_id) === String(selectedGroup))
-            .map((tData) => {
-              const existing = existingByUserId.get(Number(tData.id));
-              return {
-                ...tData,
-                status: existing?.status || 'PRESENT',
-                arrival_time: existing?.arrival_time || '',
-                certificate_status: existing?.certificate_status || null
-              };
-            })
+          all.filter((tData) => String(tData.group_id) === String(selectedGroup))
         );
       } catch {
         // ignore
       }
     };
     loadTrainees();
-    const intervalId = window.setInterval(loadTrainees, 30000);
-    return () => window.clearInterval(intervalId);
-  }, [selectedGroup, date, token]);
+  }, [selectedGroup, token]);
 
   useEffect(() => {
     const loadHistory = async () => {
@@ -83,41 +77,53 @@ function AdminAttendancePage() {
     loadHistory();
   }, [token, selectedGroup, date, fromDate, toDate, message]);
 
-  const handleStatusChange = (id, status) => {
-    setTrainees((prev) =>
-      prev.map((tData) => (tData.id === id ? { ...tData, status } : tData))
+  const handleTimeSlotToggle = (slot) => {
+    setSelectedTimeSlots((prev) =>
+      prev.includes(slot) ? prev.filter((s) => s !== slot) : [...prev, slot]
     );
   };
 
-  const handleTimeChange = (id, time) => {
-    setTrainees((prev) =>
-      prev.map((tData) => (tData.id === id ? { ...tData, arrival_time: time } : tData))
+  const handleTraineeToggle = (id) => {
+    setSelectedTrainees((prev) =>
+      prev.includes(id) ? prev.filter((tId) => tId !== id) : [...prev, id]
     );
+  };
+
+  const handleSelectAllTrainees = () => {
+    const assignableIds = trainees.filter(t => t.access_status !== 'BLOCKED').map(t => t.id);
+    if (selectedTrainees.length === assignableIds.length) {
+      setSelectedTrainees([]);
+    } else {
+      setSelectedTrainees(assignableIds);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedGroup || !date) return;
+    if (!selectedGroup || !date || selectedTimeSlots.length === 0 || selectedTrainees.length === 0) {
+      setMessage(t('attendance.messages.missingFields') || 'Veuillez sélectionner au moins un groupe, une date, un créneau et un stagiaire.');
+      return;
+    }
     setSaving(true);
     setMessage('');
     try {
-      const records = trainees
-        .filter((tData) => tData.access_status !== 'BLOCKED')
-        .map((tData) => ({
-          user_id: tData.id,
-          status: tData.status,
-          arrival_time: tData.arrival_time || null
-        }));
+      const records = selectedTrainees.map((id) => ({
+        user_id: id,
+        status: bulkStatus,
+        arrival_time: bulkStatus === 'LATE' ? bulkArrivalTime : null
+      }));
       await api.post(
         '/attendance/bulk',
         {
           group_id: Number(selectedGroup),
           date,
+          time_slots: selectedTimeSlots,
           records
         },
         token
       );
       setMessage(t('attendance.messages.saved'));
+      setSelectedTrainees([]);
     } catch (err) {
       setMessage(err.message || t('attendance.messages.saveError'));
     } finally {
@@ -127,39 +133,141 @@ function AdminAttendancePage() {
 
   const getTraineeRowClass = (tData) => {
     if (tData.access_status === 'BLOCKED') return 'attendance-row-blocked';
-    if (tData.status === 'ABSENT' && tData.certificate_status !== 'APPROVED') {
-      return 'attendance-row-warning';
-    }
-    return 'attendance-row-ok';
+    return selectedTrainees.includes(tData.id) ? 'attendance-row-selected' : '';
   };
-
-
 
   return (
     <div className="page">
       <h1>{t('attendance.title')}</h1>
-      <form className="card" onSubmit={handleSubmit}>
-        <div className="form-row">
-          <label>
-            {t('attendance.filters.date')}
-            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
-          </label>
-          <label>
-            {t('attendance.filters.group')}
-            <select
-              value={selectedGroup}
-              onChange={(e) => setSelectedGroup(e.target.value)}
-              required={user?.role === 'ADMIN'}
-              disabled={user?.role === 'TRAINER'}
-            >
-              <option value="">{t('attendance.filters.selectGroup')}</option>
-              {groups.map((g) => (
-                <option key={g.id} value={g.id}>
-                  {g.name}
-                </option>
-              ))}
-            </select>
-          </label>
+      
+      <div className="card">
+        <form onSubmit={handleSubmit}>
+          <div className="grid-2">
+            <div>
+              <h3>1. {t('attendance.step1') || 'Sélectionner la session'}</h3>
+              <div className="form-row">
+                <label>
+                  {t('attendance.filters.date')}
+                  <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+                </label>
+                <label>
+                  {t('attendance.filters.group')}
+                  <select
+                    value={selectedGroup}
+                    onChange={(e) => setSelectedGroup(e.target.value)}
+                    required={user?.role === 'ADMIN'}
+                    disabled={user?.role === 'TRAINER'}
+                  >
+                    <option value="">{t('attendance.filters.selectGroup')}</option>
+                    {groups.map((g) => (
+                      <option key={g.id} value={g.id}>
+                        {g.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              
+              <div className="mt-md">
+                <label className="field-label">{t('attendance.timeSlots') || 'Créneaux horaires'}</label>
+                <div className="time-slot-group">
+                  {TIME_SLOTS.map(slot => (
+                    <label key={slot} className={`time-slot-pill ${selectedTimeSlots.includes(slot) ? 'active' : ''}`}>
+                      <input 
+                        type="checkbox" 
+                        checked={selectedTimeSlots.includes(slot)} 
+                        onChange={() => handleTimeSlotToggle(slot)} 
+                        className="sr-only"
+                      />
+                      {slot}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3>2. {t('attendance.step2') || 'Action de présence'}</h3>
+              <div className="form-row" style={{ alignItems: 'flex-end' }}>
+                <label>
+                  {t('attendance.table.status')}
+                  <select value={bulkStatus} onChange={(e) => setBulkStatus(e.target.value)}>
+                    <option value="PRESENT">{t('common.status.PRESENT')}</option>
+                    <option value="ABSENT">{t('common.status.ABSENT')}</option>
+                    <option value="LATE">{t('common.status.LATE')}</option>
+                  </select>
+                </label>
+                
+                {bulkStatus === 'LATE' && (
+                  <label>
+                    {t('attendance.table.arrivalTime')}
+                    <input 
+                      type="time" 
+                      value={bulkArrivalTime} 
+                      onChange={(e) => setBulkArrivalTime(e.target.value)} 
+                      required
+                    />
+                  </label>
+                )}
+              </div>
+              <div style={{ marginTop: '1.5rem' }}>
+                <button type="submit" className="btn-primary" disabled={saving || selectedTrainees.length === 0 || selectedTimeSlots.length === 0}>
+                  {saving ? t('attendance.actions.saving') : t('attendance.actions.save')}
+                </button>
+                {message && <div className="form-info" style={{ marginTop: '0.5rem' }}>{message}</div>}
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      {trainees.length > 0 && (
+        <div className="card mt-lg">
+          <h3>3. {t('attendance.step3') || 'Sélectionner les stagiaires'}</h3>
+          <div className="attendance-table-wrapper">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th style={{ width: '50px' }}>
+                    <input 
+                      type="checkbox" 
+                      onChange={handleSelectAllTrainees} 
+                      checked={selectedTrainees.length > 0 && selectedTrainees.length === trainees.filter(t => t.access_status !== 'BLOCKED').length}
+                    />
+                  </th>
+                  <th>{t('attendance.table.trainee')}</th>
+                  <th>{t('trainees.columns.email')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {trainees.map((tData) => (
+                  <tr key={tData.id} className={getTraineeRowClass(tData)} onClick={() => tData.access_status !== 'BLOCKED' && handleTraineeToggle(tData.id)} style={{ cursor: tData.access_status === 'BLOCKED' ? 'not-allowed' : 'pointer' }}>
+                    <td>
+                      <input 
+                        type="checkbox" 
+                        checked={selectedTrainees.includes(tData.id)}
+                        onChange={() => {}} 
+                        disabled={tData.access_status === 'BLOCKED'}
+                      />
+                    </td>
+                    <td>
+                      {tData.last_name} {tData.first_name}
+                      {tData.access_status === 'BLOCKED' && (
+                        <span className="status-badge status-badge-danger" style={{ marginLeft: '1rem' }}>{t('common.accessStatus.BLOCKED')}</span>
+                      )}
+                    </td>
+                    <td className="muted">{tData.email}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      <div className="card mt-lg">
+        <h2>{t('attendance.history.title')}</h2>
+        <div className="form-row mb-md">
           <label>
             {t('attendance.filters.from')}
             <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
@@ -169,67 +277,12 @@ function AdminAttendancePage() {
             <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
           </label>
         </div>
-
-        {trainees.length > 0 && (
-          <div className="attendance-table-wrapper">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>{t('attendance.table.trainee')}</th>
-                  <th>{t('attendance.table.status')}</th>
-                  <th>{t('attendance.table.arrivalTime')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {trainees.map((tData) => (
-                  <tr key={tData.id} className={getTraineeRowClass(tData)}>
-                    <td>
-                      {tData.last_name} {tData.first_name}
-                      {tData.access_status === 'BLOCKED' && (
-                        <span className="status-badge status-badge-danger">{t('common.accessStatus.BLOCKED')}</span>
-                      )}
-                    </td>
-                    <td>
-                      <select
-                        value={tData.status}
-                        onChange={(e) => handleStatusChange(tData.id, e.target.value)}
-                        disabled={tData.access_status === 'BLOCKED'}
-                      >
-                        <option value="PRESENT">{t('common.status.PRESENT')}</option>
-                        <option value="ABSENT">{t('common.status.ABSENT')}</option>
-                        <option value="LATE">{t('common.status.LATE')}</option>
-                      </select>
-                    </td>
-                    <td>
-                      <input
-                        type="time"
-                        value={tData.arrival_time}
-                        onChange={(e) => handleTimeChange(tData.id, e.target.value)}
-                        disabled={tData.access_status === 'BLOCKED'}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        <div className="form-actions mt-md">
-          <button type="submit" className="btn-primary" disabled={saving || trainees.length === 0}>
-            {saving ? t('attendance.actions.saving') : t('attendance.actions.save')}
-          </button>
-        </div>
-        {message && <div className="form-info mt-sm">{message}</div>}
-      </form>
-
-      <div className="card mt-lg">
-        <h2>{t('attendance.history.title')}</h2>
         <div className="attendance-table-wrapper">
           <table className="data-table">
             <thead>
               <tr>
                 <th>{t('attendance.history.columns.date')}</th>
+                <th>{t('attendance.timeSlots') || 'Créneau'}</th>
                 <th>{t('attendance.history.columns.trainee')}</th>
                 <th>{t('attendance.history.columns.group')}</th>
                 <th>{t('attendance.history.columns.status')}</th>
@@ -239,12 +292,13 @@ function AdminAttendancePage() {
             <tbody>
               {history.length === 0 ? (
                 <tr>
-                  <td colSpan={5}>{t('attendance.history.empty')}</td>
+                  <td colSpan={6}>{t('attendance.history.empty')}</td>
                 </tr>
               ) : (
                 history.map((row) => (
                   <tr key={row.id}>
                     <td>{row.date}</td>
+                    <td>{row.time_slot}</td>
                     <td>
                       {row.last_name} {row.first_name}
                     </td>

@@ -74,14 +74,7 @@ function LoginPage() {
           {t('auth.noAccount')} <Link to="/register" className="text-link">{t('auth.registerLink')}</Link>
         </p>
 
-        <div className="auth-hint">
-          <strong>{t('auth.demoAccounts')}</strong> ({t('auth.demoPassword')} : <code>Admin123!</code>)
-          <ul>
-            <li>{t('common.roles.ADMIN')} : <code>admin@example.com</code></li>
-            <li>{t('common.roles.TRAINER')} : <code>formateur@example.com</code></li>
-            <li>{t('common.roles.TRAINEE')} : <code>stagiaire@example.com</code></li>
-          </ul>
-        </div>
+
       </div>
     </div>
   );

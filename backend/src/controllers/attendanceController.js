@@ -29,10 +29,10 @@ async function validateTraineesForGroup(records, groupId) {
 
 // POST /api/attendance/bulk
 // Enregistre les présences d'un groupe pour une date donnée
-// Body attendu : { group_id, date, records: [{ user_id, status, arrival_time }] }
+// Body attendu : { group_id, date, time_slots: [], records: [{ user_id, status, arrival_time }] }
 async function bulkUpsertAttendance(req, res) {
-  let { group_id, date, records } = req.body;
-  if (!group_id || !date || !Array.isArray(records)) {
+  let { group_id, date, time_slots, records } = req.body;
+  if (!group_id || !date || !Array.isArray(time_slots) || time_slots.length === 0 || !Array.isArray(records)) {
     return res.status(400).json({ message: 'Paramètres invalides' });
   }
 
@@ -53,15 +53,21 @@ async function bulkUpsertAttendance(req, res) {
       return res.status(403).json({ message: 'Acces refuse pour un ou plusieurs stagiaires' });
     }
 
-    const promises = records.map((r) =>
-      Attendance.upsertAttendance({
-        user_id: r.user_id,
-        group_id,
-        date,
-        status: r.status,
-        arrival_time: r.arrival_time || null
-      })
-    );
+    const promises = [];
+    for (const r of records) {
+      for (const ts of time_slots) {
+        promises.push(
+          Attendance.upsertAttendance({
+            user_id: r.user_id,
+            group_id,
+            date,
+            time_slot: ts,
+            status: r.status,
+            arrival_time: r.arrival_time || null
+          })
+        );
+      }
+    }
     await Promise.all(promises);
     res.status(200).json({ message: 'Présences enregistrées' });
   } catch (err) {
@@ -71,9 +77,9 @@ async function bulkUpsertAttendance(req, res) {
 }
 
 // GET /api/attendance
-// Filtres possibles : ?user_id= &group_id= &date=
+// Filtres possibles : ?user_id= &group_id= &date= &time_slot=
 async function listAttendance(req, res) {
-  const { user_id, date, from, to } = req.query;
+  const { user_id, date, time_slot, from, to } = req.query;
   let { group_id } = req.query;
   try {
     if (req.user.role === 'TRAINER') {
@@ -93,7 +99,7 @@ async function listAttendance(req, res) {
         return res.status(400).json({ message: 'Le paramètre group_id est requis pour le formateur' });
       }
     }
-    const records = await Attendance.findAll({ user_id, group_id, date, from, to });
+    const records = await Attendance.findAll({ user_id, group_id, date, time_slot, from, to });
     res.json(records);
   } catch (err) {
     console.error(err);
@@ -109,7 +115,7 @@ module.exports = {
 
 // GET /api/attendance/export
 async function exportAttendanceCsv(req, res) {
-  const { user_id, date, from, to } = req.query;
+  const { user_id, date, time_slot, from, to } = req.query;
   let { group_id } = req.query;
   try {
     if (req.user.role === 'TRAINER') {
@@ -124,7 +130,7 @@ async function exportAttendanceCsv(req, res) {
         return res.status(400).json({ message: 'Le paramètre group_id est requis pour le formateur' });
       }
     }
-    const records = await Attendance.findAll({ user_id, group_id, date, from, to });
+    const records = await Attendance.findAll({ user_id, group_id, date, time_slot, from, to });
     const csv = buildAttendanceCsv(records);
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', 'attachment; filename="presences.csv"');

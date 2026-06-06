@@ -4,7 +4,7 @@ import { api } from '../services/api';
 import DataTable from '../components/DataTable';
 import { useTranslation } from 'react-i18next';
 
-function AdminTraineesPage() {
+function AdminUsersPage() {
   const { token, user } = useAuth();
   const { t } = useTranslation();
   const canManage = user?.role === 'ADMIN';
@@ -16,6 +16,7 @@ function AdminTraineesPage() {
     last_name: '',
     email: '',
     password: '',
+    role: 'TRAINEE',
     group_id: '',
     access_status: 'ALLOWED'
   });
@@ -27,7 +28,7 @@ function AdminTraineesPage() {
     setLoading(true);
     try {
       const [tData, gData] = await Promise.all([
-        api.get('/users/trainees', token),
+        api.get('/users', token),
         api.get('/groups', token)
       ]);
       setTrainees(tData);
@@ -47,7 +48,13 @@ function AdminTraineesPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => {
+      const nextForm = { ...prev, [name]: value };
+      if (name === 'role' && value !== 'TRAINEE') {
+        nextForm.group_id = '';
+      }
+      return nextForm;
+    });
   };
 
   const handleEdit = (trainee) => {
@@ -57,6 +64,7 @@ function AdminTraineesPage() {
       last_name: trainee.last_name,
       email: trainee.email,
       password: '',
+      role: trainee.role || 'TRAINEE',
       group_id: trainee.group_id || '',
       access_status: trainee.access_status || 'ALLOWED'
     });
@@ -69,6 +77,7 @@ function AdminTraineesPage() {
       last_name: '',
       email: '',
       password: '',
+      role: 'TRAINEE',
       group_id: '',
       access_status: 'ALLOWED'
     });
@@ -92,6 +101,7 @@ function AdminTraineesPage() {
         first_name: form.first_name,
         last_name: form.last_name,
         email: form.email,
+        role: form.role,
         group_id: form.group_id || null,
         access_status: form.access_status
       };
@@ -99,9 +109,9 @@ function AdminTraineesPage() {
         payload.password = form.password;
       }
       if (form.id) {
-        await api.put(`/users/trainees/${form.id}`, payload, token);
+        await api.put(`/users/${form.id}`, payload, token);
       } else {
-        await api.post('/users/trainees', payload, token);
+        await api.post('/users', payload, token);
       }
       await load();
       resetForm();
@@ -115,7 +125,7 @@ function AdminTraineesPage() {
   const handleDelete = async (id) => {
     if (!window.confirm(t('trainees.confirmDelete'))) return;
     try {
-      await api.del(`/users/trainees/${id}`, token);
+      await api.del(`/users/${id}`, token);
       await load();
     } catch (err) {
       setError(err.message || t('trainees.errorDelete'));
@@ -126,6 +136,7 @@ function AdminTraineesPage() {
     { key: 'last_name', label: t('trainees.columns.lastName') },
     { key: 'first_name', label: t('trainees.columns.firstName') },
     { key: 'email', label: t('trainees.columns.email') },
+    { key: 'role', label: t('common.role') || 'Role', render: (val) => t(`common.roles.${val}`) || val },
     { key: 'group_name', label: t('trainees.columns.group') },
     {
       key: 'access_status',
@@ -200,16 +211,26 @@ function AdminTraineesPage() {
                 />
               </label>
               <label>
-                {t('trainees.group')}
-                <select name="group_id" value={form.group_id} onChange={handleChange}>
-                  <option value="">{t('common.noGroup')}</option>
-                  {groups.map((g) => (
-                    <option key={g.id} value={g.id}>
-                      {g.name}
-                    </option>
-                  ))}
+                {t('common.role') || 'Role'}
+                <select name="role" value={form.role} onChange={handleChange}>
+                  <option value="TRAINEE">{t('common.roles.TRAINEE') || 'Trainee'}</option>
+                  <option value="TRAINER">{t('common.roles.TRAINER') || 'Trainer'}</option>
+                  <option value="ADMIN">{t('common.roles.ADMIN') || 'Admin'}</option>
                 </select>
               </label>
+              {form.role === 'TRAINEE' && (
+                <label>
+                  {t('trainees.group')}
+                  <select name="group_id" value={form.group_id} onChange={handleChange}>
+                    <option value="">{t('common.noGroup')}</option>
+                    {groups.map((g) => (
+                      <option key={g.id} value={g.id}>
+                        {g.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
               <label>
                 {t('trainees.accessStatus')}
                 <select name="access_status" value={form.access_status} onChange={handleChange}>
@@ -246,4 +267,4 @@ function AdminTraineesPage() {
   );
 }
 
-export default AdminTraineesPage;
+export default AdminUsersPage;

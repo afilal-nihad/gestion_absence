@@ -12,6 +12,7 @@ function RegisterPage() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('TRAINEE');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -28,7 +29,8 @@ function RegisterPage() {
         first_name: firstName,
         last_name: lastName,
         email,
-        password
+        password,
+        role
       });
       navigate('/login');
     } catch (err) {
@@ -79,6 +81,14 @@ function RegisterPage() {
               autoComplete="new-password"
               required
             />
+          </label>
+          <label>
+            {t('common.role') || 'Role'}
+            <select value={role} onChange={(e) => setRole(e.target.value)}>
+              <option value="TRAINEE">{t('common.roles.TRAINEE') || 'Trainee'}</option>
+              <option value="TRAINER">{t('common.roles.TRAINER') || 'Trainer'}</option>
+              <option value="ADMIN">{t('common.roles.ADMIN') || 'Admin'}</option>
+            </select>
           </label>
 
           {error && <div className="form-error">{error}</div>}

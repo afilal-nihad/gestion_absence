@@ -204,9 +204,14 @@
       "saving": "Guardando...",
       "export": "Exportar CSV"
     },
+    "step1": "1. Seleccionar la sesión",
+    "step2": "2. Acción de asistencia",
+    "step3": "3. Seleccionar los estudiantes",
+    "timeSlots": "Horarios",
     "messages": {
       "saved": "Asistencias registradas",
-      "saveError": "Error al registrar la asistencia"
+      "saveError": "Error al registrar la asistencia",
+      "missingFields": "Seleccione un grupo, una fecha, un horario y al menos un estudiante."
     },
     "history": {
       "title": "Historial de Asistencias",

@@ -5,14 +5,13 @@ async function getPool() {
   return initDb();
 }
 
-async function upsertAttendance({ user_id, group_id, date, status, arrival_time = null }) {
+async function upsertAttendance({ user_id, group_id, date, time_slot, status, arrival_time = null }) {
   const pool = await getPool();
-  // On suppose une seule ligne par utilisateur/date
   const [result] = await pool.query(
-    `INSERT INTO \`attendance\` (user_id, group_id, date, status, arrival_time)
-     VALUES (?, ?, ?, ?, ?)
+    `INSERT INTO \`attendance\` (user_id, group_id, date, time_slot, status, arrival_time)
+     VALUES (?, ?, ?, ?, ?, ?)
      ON DUPLICATE KEY UPDATE status = VALUES(status), arrival_time = VALUES(arrival_time), group_id = VALUES(group_id)`,
-    [user_id, group_id, date, status, arrival_time]
+    [user_id, group_id, date, time_slot, status, arrival_time]
   );
   return result;
 }
@@ -41,15 +40,22 @@ async function findById(id) {
   return rows[0] || null;
 }
 
-async function findByGroupAndDate(group_id, date) {
+async function findByGroupAndDate(group_id, date, time_slot = null) {
   const pool = await getPool();
+  const conditions = ['a.group_id = ?', 'a.date = ?'];
+  const values = [group_id, date];
+  if (time_slot) {
+    conditions.push('a.time_slot = ?');
+    values.push(time_slot);
+  }
+  
   const [rows] = await pool.query(
     `SELECT a.*, u.first_name, u.last_name
      FROM \`attendance\` a
      JOIN \`users\` u ON a.user_id = u.id
-     WHERE a.group_id = ? AND a.date = ?
+     WHERE ${conditions.join(' AND ')}
      ORDER BY u.last_name, u.first_name`,
-    [group_id, date]
+    values
   );
   return rows;
 }
@@ -70,6 +76,10 @@ async function findAll(filters = {}) {
   if (filters.date) {
     conditions.push('a.date = ?');
     values.push(filters.date);
+  }
+  if (filters.time_slot) {
+    conditions.push('a.time_slot = ?');
+    values.push(filters.time_slot);
   }
   if (filters.from) {
     conditions.push('a.date >= ?');
@@ -116,7 +126,7 @@ async function listCertificates(filters = {}) {
   }
   const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
   const [rows] = await pool.query(
-    `SELECT c.*, a.date, a.status, u.first_name, u.last_name, g.name AS group_name
+    `SELECT c.*, a.date, a.time_slot, a.status, u.first_name, u.last_name, g.name AS group_name
      FROM \`absence_certificates\` c
      JOIN \`attendance\` a ON c.attendance_id = a.id
      JOIN \`users\` u ON c.user_id = u.id

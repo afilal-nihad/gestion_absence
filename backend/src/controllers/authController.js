@@ -19,10 +19,14 @@ function generateToken(user) {
 
 // POST /api/auth/register
 async function register(req, res) {
-  const { first_name, last_name, email, password } = req.body;
+  const { first_name, last_name, email, password, role } = req.body;
   if (!first_name || !last_name || !email || !password) {
     return res.status(400).json({ message: 'Champs obligatoires manquants' });
   }
+
+  // Validate role if provided, otherwise default to TRAINEE
+  const validRoles = ['ADMIN', 'TRAINER', 'TRAINEE'];
+  const userRole = (role && validRoles.includes(role)) ? role : 'TRAINEE';
 
   try {
     const existing = await User.findByEmail(email);
@@ -36,7 +40,7 @@ async function register(req, res) {
       last_name,
       email,
       password_hash,
-      role: 'TRAINEE',
+      role: userRole,
       account_status: 'PENDING',
       group_id: null
     });

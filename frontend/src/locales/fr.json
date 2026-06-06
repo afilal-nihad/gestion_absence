@@ -204,9 +204,14 @@
       "saving": "Enregistrement...",
       "export": "Export CSV"
     },
+    "step1": "1. Sélectionner la session",
+    "step2": "2. Action de présence",
+    "step3": "3. Sélectionner les stagiaires",
+    "timeSlots": "Créneaux horaires",
     "messages": {
       "saved": "Présences enregistrées",
-      "saveError": "Erreur lors de l'enregistrement"
+      "saveError": "Erreur lors de l'enregistrement",
+      "missingFields": "Veuillez sélectionner au moins un groupe, une date, un créneau et un stagiaire."
     },
     "history": {
       "title": "Historique des présences",

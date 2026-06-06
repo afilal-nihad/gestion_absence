@@ -52,6 +52,7 @@ function StudentAttendancePage() {
 
   const columns = [
     { key: 'date', label: t('studentAttendance.columns.date') },
+    { key: 'time_slot', label: t('attendance.timeSlots') || 'Créneau' },
     {
       key: 'status',
       label: t('studentAttendance.columns.status'),

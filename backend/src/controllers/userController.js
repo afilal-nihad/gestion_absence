@@ -20,8 +20,25 @@ async function listTrainees(req, res) {
   }
 }
 
-// POST /api/users/trainees
-async function createTrainee(req, res) {
+// GET /api/users
+async function listAllUsers(req, res) {
+  try {
+    const pool = require('../config/db').getPool ? await require('../config/db').getPool() : await require('../config/db').initDb();
+    const [rows] = await pool.query(
+      `SELECT u.*, g.name AS group_name 
+       FROM \`users\` u 
+       LEFT JOIN \`groups\` g ON u.group_id = g.id 
+       ORDER BY u.role, u.last_name, u.first_name`
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+}
+
+// POST /api/users
+async function createUser(req, res) {
   const { first_name, last_name, email, password, group_id } = req.body;
   if (!first_name || !last_name || !email || !password) {
     return res.status(400).json({ message: 'Champs obligatoires manquants' });
@@ -37,8 +54,8 @@ async function createTrainee(req, res) {
       last_name,
       email,
       password_hash,
-      role: 'TRAINEE',
-      account_status: 'PENDING',
+      role: req.body.role || 'TRAINEE',
+      account_status: 'APPROVED',
       access_status: 'ALLOWED',
       group_id: group_id || null
     });
@@ -49,13 +66,13 @@ async function createTrainee(req, res) {
   }
 }
 
-// PUT /api/users/trainees/:id
-async function updateTrainee(req, res) {
+// PUT /api/users/:id
+async function updateUser(req, res) {
   const { id } = req.params;
-  const { first_name, last_name, email, password, group_id, access_status } = req.body;
+  const { first_name, last_name, email, password, role, group_id, access_status } = req.body;
 
   try {
-    const fields = { first_name, last_name, email, group_id, access_status };
+    const fields = { first_name, last_name, email, role, group_id, access_status };
     if (password) {
       fields.password_hash = await bcrypt.hash(password, 10);
     }
@@ -68,8 +85,8 @@ async function updateTrainee(req, res) {
   }
 }
 
-// DELETE /api/users/trainees/:id
-async function deleteTrainee(req, res) {
+// DELETE /api/users/:id
+async function deleteUser(req, res) {
   const { id } = req.params;
   try {
     await User.deleteUser(id);
@@ -231,9 +248,10 @@ async function listTrainers(req, res) {
 module.exports = {
   listTrainees,
   listTrainers,
-  createTrainee,
-  updateTrainee,
-  deleteTrainee,
+  listAllUsers,
+  createUser,
+  updateUser,
+  deleteUser,
   getTraineeAttendance,
   getMyAttendance,
   listPendingUsers,

@@ -8,7 +8,7 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import StudentAttendancePage from './pages/StudentAttendancePage';
 import StudentProfilePage from './pages/StudentProfilePage';
-import AdminTraineesPage from './pages/AdminTraineesPage';
+import AdminUsersPage from './pages/AdminUsersPage';
 import AdminGroupsPage from './pages/AdminGroupsPage';
 import AdminAttendancePage from './pages/AdminAttendancePage';
 import AdminStatsPage from './pages/AdminStatsPage';
@@ -80,7 +80,7 @@ function App() {
           path="admin/stagiaires"
           element={
             <ProtectedRoute allowedRoles={['ADMIN', 'TRAINER']}>
-              <AdminTraineesPage />
+              <AdminUsersPage />
             </ProtectedRoute>
           }
         />
@@ -121,7 +121,7 @@ function App() {
           path="formateur/stagiaires"
           element={
             <ProtectedRoute allowedRoles={['TRAINER']}>
-              <AdminTraineesPage />
+              <AdminUsersPage />
             </ProtectedRoute>
           }
         />

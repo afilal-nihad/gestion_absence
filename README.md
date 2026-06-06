@@ -102,15 +102,15 @@ npm run dev
 
 ---
 
-## 🔑 Comptes de test
+## 🔑 Comptes de démonstration
 
-Un compte administrateur est créé par défaut lors de l'initialisation de la base de données :
+Des comptes de démonstration sont disponibles (mot de passe : `Admin123!`) :
 
 | Rôle | Email | Mot de passe |
 | :--- | :--- | :--- |
 | **Administrateur** | `admin@example.com` | `Admin123!` |
-
-*Pour tester les rôles **Formateur** ou **Stagiaire**, veuillez créer un nouveau compte via la page d'inscription de l'application, puis valider et assigner le rôle correspondant depuis le panneau Administrateur.*
+| **Formateur** | `formateur@example.com` | `Admin123!` |
+| **Stagiaire** | `stagiaire@example.com` | `Admin123!` |
 
 ---
 

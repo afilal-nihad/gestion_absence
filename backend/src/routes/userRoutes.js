@@ -14,9 +14,12 @@ router.put('/certificates/:id/status', authorizeRoles('ADMIN'), userController.r
 router.get('/trainers', authorizeRoles('ADMIN'), userController.listTrainers);
 router.get('/trainees', authorizeRoles('ADMIN', 'TRAINER'), userController.listTrainees);
 router.get('/trainees/:id/attendance', authorizeRoles('ADMIN', 'TRAINER'), userController.getTraineeAttendance);
-router.post('/trainees', authorizeRoles('ADMIN'), userController.createTrainee);
-router.put('/trainees/:id', authorizeRoles('ADMIN'), userController.updateTrainee);
-router.delete('/trainees/:id', authorizeRoles('ADMIN'), userController.deleteTrainee);
+
+// Gestion des utilisateurs (tous rôles)
+router.get('/', authorizeRoles('ADMIN'), userController.listAllUsers);
+router.post('/', authorizeRoles('ADMIN'), userController.createUser);
+router.put('/:id', authorizeRoles('ADMIN'), userController.updateUser);
+router.delete('/:id', authorizeRoles('ADMIN'), userController.deleteUser);
 
 // Validations de compte (ADMIN)
 router.get('/pending', authorizeRoles('ADMIN'), userController.listPendingUsers);

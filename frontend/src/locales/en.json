@@ -204,9 +204,14 @@
       "saving": "Saving...",
       "export": "Export CSV"
     },
+    "step1": "1. Select session",
+    "step2": "2. Attendance action",
+    "step3": "3. Select trainees",
+    "timeSlots": "Time slots",
     "messages": {
       "saved": "Attendance recorded",
-      "saveError": "Error recording attendance"
+      "saveError": "Error recording attendance",
+      "missingFields": "Please select a group, a date, a time slot, and at least one trainee."
     },
     "history": {
       "title": "Attendance History",
