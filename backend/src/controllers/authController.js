@@ -37,7 +37,7 @@ async function register(req, res) {
       email,
       password_hash,
       role: 'TRAINEE',
-      account_status: 'SUSPENDED',
+      account_status: 'PENDING',
       group_id: null
     });
 

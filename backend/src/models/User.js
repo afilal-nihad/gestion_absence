@@ -46,7 +46,7 @@ async function createUser(user) {
     email,
     password_hash,
     role = 'TRAINEE',
-    account_status = 'SUSPENDED',
+    account_status = 'PENDING',
     access_status = 'ALLOWED',
     group_id = null
   } = user;
@@ -89,10 +89,19 @@ async function deleteUser(id) {
   return true;
 }
 
+async function findAllTrainers() {
+  const pool = await getPool();
+  const [rows] = await pool.query(
+    `SELECT u.* FROM \`users\` u WHERE u.role = 'TRAINER' ORDER BY u.last_name, u.first_name`
+  );
+  return rows;
+}
+
 module.exports = {
   findByEmail,
   findById,
   findAllTrainees,
+  findAllTrainers,
   findPendingUsers,
   createUser,
   updateUser,

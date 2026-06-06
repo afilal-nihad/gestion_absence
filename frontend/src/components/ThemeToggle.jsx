@@ -15,9 +15,6 @@ export default function ThemeToggle() {
       aria-label={isDark ? t('theme.switchToLight') : t('theme.switchToDark')}
       title={isDark ? t('theme.light') : t('theme.dark')}
     >
-      <span className="theme-toggle-icon" aria-hidden="true">
-        {isDark ? 'D' : 'L'}
-      </span>
       <span>{isDark ? t('theme.dark') : t('theme.light')}</span>
     </button>
   );

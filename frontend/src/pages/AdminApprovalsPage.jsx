@@ -28,6 +28,12 @@ function AdminApprovalsPage() {
 
   const updateUser = async (user, accountStatus) => {
     const role = user.role || 'TRAINEE';
+    
+    if (accountStatus === 'APPROVED' && role === 'TRAINEE' && !user.group_id) {
+      setMessage(t('common.error') + ' : ' + t('common.noGroup'));
+      return;
+    }
+
     await api.put(
       `/users/${user.id}/status`,
       {

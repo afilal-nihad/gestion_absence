@@ -9,7 +9,8 @@ function AdminGroupsPage() {
   const { t } = useTranslation();
   const canManage = user?.role === 'ADMIN';
   const [groups, setGroups] = useState([]);
-  const [form, setForm] = useState({ id: null, name: '', description: '' });
+  const [trainers, setTrainers] = useState([]);
+  const [form, setForm] = useState({ id: null, name: '', description: '', trainer_ids: [] });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -19,6 +20,10 @@ function AdminGroupsPage() {
     try {
       const data = await api.get('/groups', token);
       setGroups(data);
+      if (canManage) {
+        const trainersData = await api.get('/users/trainers', token);
+        setTrainers(trainersData);
+      }
     } catch (err) {
       setError(err.message || t('groups.errorLoad'));
     } finally {
@@ -28,23 +33,35 @@ function AdminGroupsPage() {
 
   useEffect(() => {
     load();
-  }, [token]);
+  }, [token, canManage]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleTrainerChange = (trainerId) => {
+    setForm((prev) => {
+      const current = prev.trainer_ids || [];
+      if (current.includes(trainerId)) {
+        return { ...prev, trainer_ids: current.filter(id => id !== trainerId) };
+      } else {
+        return { ...prev, trainer_ids: [...current, trainerId] };
+      }
+    });
+  };
+
   const handleEdit = (group) => {
     setForm({
       id: group.id,
       name: group.name,
-      description: group.description || ''
+      description: group.description || '',
+      trainer_ids: group.trainer_ids || []
     });
   };
 
   const resetForm = () => {
-    setForm({ id: null, name: '', description: '' });
+    setForm({ id: null, name: '', description: '', trainer_ids: [] });
     setError('');
   };
 
@@ -59,7 +76,8 @@ function AdminGroupsPage() {
     try {
       const payload = {
         name: form.name,
-        description: form.description || null
+        description: form.description || null,
+        trainer_ids: form.trainer_ids
       };
       if (form.id) {
         await api.put(`/groups/${form.id}`, payload, token);
@@ -128,6 +146,29 @@ function AdminGroupsPage() {
                   rows={3}
                 />
               </label>
+              
+              <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+                  Assigner des formateurs
+                </label>
+                <div style={{ maxHeight: '150px', overflowY: 'auto', border: '1px solid #ccc', padding: '0.5rem', borderRadius: '4px' }}>
+                  {trainers.map(trainer => (
+                    <label key={trainer.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '0.25rem', cursor: 'pointer', fontWeight: 'normal' }}>
+                      <input 
+                        type="checkbox" 
+                        checked={(form.trainer_ids || []).includes(trainer.id)} 
+                        onChange={() => handleTrainerChange(trainer.id)} 
+                        style={{ marginRight: '0.5rem' }}
+                      />
+                      {trainer.first_name} {trainer.last_name}
+                    </label>
+                  ))}
+                  {trainers.length === 0 && (
+                    <span style={{ color: '#666', fontSize: '0.9rem' }}>Aucun formateur trouvé.</span>
+                  )}
+                </div>
+              </div>
+
               {error && <div className="form-error">{error}</div>}
               <div className="form-actions">
                 <button type="submit" className="btn-primary" disabled={saving}>

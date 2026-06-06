@@ -75,8 +75,16 @@ function StudentAttendancePage() {
             {t('studentAttendance.uploadCertificate')}
             <input
               type="file"
-              accept=".pdf,image/*"
-              onChange={(e) => uploadCertificate(row.id, e.target.files?.[0])}
+              accept=".pdf,application/pdf"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file && file.type !== 'application/pdf' && !file.name.endsWith('.pdf')) {
+                  alert(t('common.error') + ': PDF only');
+                  e.target.value = '';
+                  return;
+                }
+                uploadCertificate(row.id, file);
+              }}
             />
           </label>
         );

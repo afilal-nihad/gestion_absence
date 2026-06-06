@@ -133,31 +133,7 @@ function AdminAttendancePage() {
     return 'attendance-row-ok';
   };
 
-  const handleExportCsv = () => {
-    const params = new URLSearchParams();
-    if (selectedGroup) params.set('group_id', selectedGroup);
-    if (date) params.set('date', date);
-    if (fromDate) params.set('from', fromDate);
-    if (toDate) params.set('to', toDate);
-    const query = params.toString() ? `?${params.toString()}` : '';
-    fetch(`http://localhost:4000/api/attendance/export${query}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then((res) => res.blob())
-      .then((blob) => {
-        const objectUrl = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = objectUrl;
-        a.download = 'presences.csv';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(objectUrl);
-      })
-      .catch(() => {
-        // ignore
-      });
-  };
+
 
   return (
     <div className="page">
@@ -242,9 +218,6 @@ function AdminAttendancePage() {
         <div className="form-actions mt-md">
           <button type="submit" className="btn-primary" disabled={saving || trainees.length === 0}>
             {saving ? t('attendance.actions.saving') : t('attendance.actions.save')}
-          </button>
-          <button type="button" className="btn-secondary" onClick={handleExportCsv}>
-            {t('attendance.actions.export')}
           </button>
         </div>
         {message && <div className="form-info mt-sm">{message}</div>}

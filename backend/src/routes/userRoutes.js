@@ -11,6 +11,7 @@ router.use(authenticateToken);
 
 router.get('/certificates', authorizeRoles('ADMIN'), userController.listCertificates);
 router.put('/certificates/:id/status', authorizeRoles('ADMIN'), userController.reviewCertificate);
+router.get('/trainers', authorizeRoles('ADMIN'), userController.listTrainers);
 router.get('/trainees', authorizeRoles('ADMIN', 'TRAINER'), userController.listTrainees);
 router.get('/trainees/:id/attendance', authorizeRoles('ADMIN', 'TRAINER'), userController.getTraineeAttendance);
 router.post('/trainees', authorizeRoles('ADMIN'), userController.createTrainee);

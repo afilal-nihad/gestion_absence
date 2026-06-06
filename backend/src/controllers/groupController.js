@@ -4,11 +4,11 @@ const Group = require('../models/Group');
 // GET /api/groups
 async function listGroups(req, res) {
   try {
-    const groups = await Group.findAllGroups();
     if (req.user.role === 'TRAINER') {
-      const ownGroups = groups.filter((g) => String(g.id) === String(req.user.group_id));
+      const ownGroups = await Group.findGroupsForTrainer(req.user.id);
       return res.json(ownGroups);
     }
+    const groups = await Group.findAllGroups();
     res.json(groups);
   } catch (err) {
     console.error(err);
@@ -18,12 +18,12 @@ async function listGroups(req, res) {
 
 // POST /api/groups
 async function createGroup(req, res) {
-  const { name, description } = req.body;
+  const { name, description, trainer_ids } = req.body;
   if (!name) {
     return res.status(400).json({ message: 'Le nom du groupe est requis' });
   }
   try {
-    const created = await Group.createGroup({ name, description });
+    const created = await Group.createGroup({ name, description, trainer_ids });
     res.status(201).json(created);
   } catch (err) {
     console.error(err);
@@ -34,9 +34,9 @@ async function createGroup(req, res) {
 // PUT /api/groups/:id
 async function updateGroup(req, res) {
   const { id } = req.params;
-  const { name, description } = req.body;
+  const { name, description, trainer_ids } = req.body;
   try {
-    await Group.updateGroup(id, { name, description });
+    await Group.updateGroup(id, { name, description, trainer_ids });
     const updated = await Group.findById(id);
     res.json(updated);
   } catch (err) {

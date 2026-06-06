@@ -26,6 +26,21 @@ CREATE TABLE IF NOT EXISTS `users` (
   CONSTRAINT fk_users_group FOREIGN KEY (group_id) REFERENCES `groups`(id) ON DELETE SET NULL
 );
 
+-- Table des présences
+CREATE TABLE IF NOT EXISTS `attendance` (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  group_id INT NOT NULL,
+  date DATE NOT NULL,
+  time_slot ENUM('08:30-11:00', '11:00-13:30', '13:30-16:00', '16:00-18:00') NOT NULL,
+  status ENUM('PRESENT', 'ABSENT', 'LATE') NOT NULL,
+  arrival_time TIME NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY unique_user_date_slot (user_id, date, time_slot),
+  CONSTRAINT fk_attendance_user FOREIGN KEY (user_id) REFERENCES `users`(id) ON DELETE CASCADE,
+  CONSTRAINT fk_attendance_group FOREIGN KEY (group_id) REFERENCES `groups`(id) ON DELETE CASCADE
+);
+
 -- Justificatifs d'absence soumis par les stagiaires et valides par l'administration
 CREATE TABLE IF NOT EXISTS `absence_certificates` (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -44,19 +59,15 @@ CREATE TABLE IF NOT EXISTS `absence_certificates` (
   CONSTRAINT fk_certificate_reviewer FOREIGN KEY (reviewed_by) REFERENCES `users`(id) ON DELETE SET NULL
 );
 
--- Table des présences
-CREATE TABLE IF NOT EXISTS `attendance` (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
+-- Table de liaison formateurs / groupes (relation many-to-many)
+CREATE TABLE IF NOT EXISTS `trainer_groups` (
+  trainer_id INT NOT NULL,
   group_id INT NOT NULL,
-  date DATE NOT NULL,
-  status ENUM('PRESENT', 'ABSENT', 'LATE') NOT NULL,
-  arrival_time TIME NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY unique_user_date (user_id, date),
-  CONSTRAINT fk_attendance_user FOREIGN KEY (user_id) REFERENCES `users`(id) ON DELETE CASCADE,
-  CONSTRAINT fk_attendance_group FOREIGN KEY (group_id) REFERENCES `groups`(id) ON DELETE CASCADE
+  PRIMARY KEY (trainer_id, group_id),
+  CONSTRAINT fk_tg_trainer FOREIGN KEY (trainer_id) REFERENCES `users`(id) ON DELETE CASCADE,
+  CONSTRAINT fk_tg_group FOREIGN KEY (group_id) REFERENCES `groups`(id) ON DELETE CASCADE
 );
+
 
 -- Utilisateur admin par défaut
 -- Identifiants : admin@example.com / Admin123!

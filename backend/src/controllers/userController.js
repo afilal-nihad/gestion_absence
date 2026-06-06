@@ -2,13 +2,16 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const Attendance = require('../models/Attendance');
+const Group = require('../models/Group');
 
 // GET /api/users/trainees
 async function listTrainees(req, res) {
   try {
     let trainees = await User.findAllTrainees();
     if (req.user.role === 'TRAINER') {
-      trainees = trainees.filter((t) => String(t.group_id) === String(req.user.group_id));
+      const ownGroups = await Group.findGroupsForTrainer(req.user.id);
+      const ownGroupIds = ownGroups.map(g => String(g.id));
+      trainees = trainees.filter((t) => ownGroupIds.includes(String(t.group_id)));
     }
     res.json(trainees);
   } catch (err) {
@@ -35,7 +38,7 @@ async function createTrainee(req, res) {
       email,
       password_hash,
       role: 'TRAINEE',
-      account_status: 'SUSPENDED',
+      account_status: 'PENDING',
       access_status: 'ALLOWED',
       group_id: group_id || null
     });
@@ -83,7 +86,9 @@ async function getTraineeAttendance(req, res) {
   try {
     if (req.user.role === 'TRAINER') {
       const trainee = await User.findById(id);
-      if (!trainee || String(trainee.group_id) !== String(req.user.group_id)) {
+      const ownGroups = await Group.findGroupsForTrainer(req.user.id);
+      const ownGroupIds = ownGroups.map(g => String(g.id));
+      if (!trainee || !ownGroupIds.includes(String(trainee.group_id))) {
         return res.status(403).json({ message: 'Acces refuse' });
       }
     }
@@ -212,8 +217,20 @@ async function reviewCertificate(req, res) {
   }
 }
 
+// GET /api/users/trainers
+async function listTrainers(req, res) {
+  try {
+    const trainers = await User.findAllTrainers();
+    res.json(trainers);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+}
+
 module.exports = {
   listTrainees,
+  listTrainers,
   createTrainee,
   updateTrainee,
   deleteTrainee,

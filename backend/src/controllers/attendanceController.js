@@ -1,6 +1,7 @@
 // Contrôleur des présences
 const Attendance = require('../models/Attendance');
 const User = require('../models/User');
+const Group = require('../models/Group');
 
 function buildAttendanceCsv(records) {
   const lines = ['Date,Groupe,Stagiaire,Statut,Heure_arrivee'];
@@ -37,13 +38,14 @@ async function bulkUpsertAttendance(req, res) {
 
   try {
     if (req.user.role === 'TRAINER') {
-      if (!req.user.group_id) {
+      const ownGroups = await Group.findGroupsForTrainer(req.user.id);
+      const ownGroupIds = ownGroups.map(g => String(g.id));
+      if (ownGroupIds.length === 0) {
         return res.status(403).json({ message: 'Aucun groupe assigne au formateur' });
       }
-      if (Number(group_id) !== Number(req.user.group_id)) {
+      if (!ownGroupIds.includes(String(group_id))) {
         return res.status(403).json({ message: 'Acces refuse pour ce groupe' });
       }
-      group_id = req.user.group_id;
     }
 
     const recordsBelongToGroup = await validateTraineesForGroup(records, group_id);
@@ -75,10 +77,21 @@ async function listAttendance(req, res) {
   let { group_id } = req.query;
   try {
     if (req.user.role === 'TRAINER') {
-      if (!req.user.group_id) {
+      const ownGroups = await Group.findGroupsForTrainer(req.user.id);
+      const ownGroupIds = ownGroups.map(g => String(g.id));
+      if (ownGroupIds.length === 0) {
         return res.status(403).json({ message: 'Aucun groupe assigne au formateur' });
       }
-      group_id = req.user.group_id;
+      if (group_id && !ownGroupIds.includes(String(group_id))) {
+        return res.status(403).json({ message: 'Acces refuse pour ce groupe' });
+      } else if (!group_id) {
+        // If trainer doesn't filter by group_id, fetch all their groups.
+        // As a shortcut we can return all their allowed records if the frontend
+        // provides group_id. The frontend always does provide group_id for trainers.
+        // But let's handle if it doesn't just in case (we can just error or leave group_id undefined and filter later).
+        // Since we didn't change Attendance.findAll to accept array, let's enforce group_id for trainers.
+        return res.status(400).json({ message: 'Le paramètre group_id est requis pour le formateur' });
+      }
     }
     const records = await Attendance.findAll({ user_id, group_id, date, from, to });
     res.json(records);
@@ -100,10 +113,16 @@ async function exportAttendanceCsv(req, res) {
   let { group_id } = req.query;
   try {
     if (req.user.role === 'TRAINER') {
-      if (!req.user.group_id) {
+      const ownGroups = await Group.findGroupsForTrainer(req.user.id);
+      const ownGroupIds = ownGroups.map(g => String(g.id));
+      if (ownGroupIds.length === 0) {
         return res.status(403).json({ message: 'Aucun groupe assigne au formateur' });
       }
-      group_id = req.user.group_id;
+      if (group_id && !ownGroupIds.includes(String(group_id))) {
+        return res.status(403).json({ message: 'Acces refuse pour ce groupe' });
+      } else if (!group_id) {
+        return res.status(400).json({ message: 'Le paramètre group_id est requis pour le formateur' });
+      }
     }
     const records = await Attendance.findAll({ user_id, group_id, date, from, to });
     const csv = buildAttendanceCsv(records);
