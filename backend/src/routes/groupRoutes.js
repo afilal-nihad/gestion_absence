@@ -3,6 +3,7 @@ const router = express.Router();
 const groupController = require('../controllers/groupController');
 const { authenticateToken, authorizeRoles } = require('../middleware/authMiddleware');
 
+router.get('/public', groupController.listPublicGroups);
 router.use(authenticateToken);
 
 router.get('/', authorizeRoles('ADMIN', 'TRAINER'), groupController.listGroups);

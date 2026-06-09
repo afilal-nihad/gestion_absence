@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +15,20 @@ function RegisterPage() {
   const [role, setRole] = useState('TRAINEE');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [groups, setGroups] = useState([]);
+  const [groupId, setGroupId] = useState('');
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        const data = await api.get('/groups/public');
+        setGroups(data);
+      } catch (err) {
+        // ignore
+      }
+    };
+    fetchGroups();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +44,8 @@ function RegisterPage() {
         last_name: lastName,
         email,
         password,
-        role
+        role,
+        group_id: role === 'TRAINEE' ? (groupId || null) : null
       });
       navigate('/login');
     } catch (err) {
@@ -90,6 +105,18 @@ function RegisterPage() {
               <option value="ADMIN">{t('common.roles.ADMIN') || 'Admin'}</option>
             </select>
           </label>
+          
+          {role === 'TRAINEE' && (
+            <label>
+              {t('trainees.group') || 'Groupe'}
+              <select value={groupId} onChange={(e) => setGroupId(e.target.value)}>
+                <option value="">{t('common.noGroup')}</option>
+                {groups.map((g) => (
+                  <option key={g.id} value={g.id}>{g.name}</option>
+                ))}
+              </select>
+            </label>
+          )}
 
           {error && <div className="form-error">{error}</div>}
 

@@ -19,7 +19,7 @@ function generateToken(user) {
 
 // POST /api/auth/register
 async function register(req, res) {
-  const { first_name, last_name, email, password, role } = req.body;
+  const { first_name, last_name, email, password, role, group_id } = req.body;
   if (!first_name || !last_name || !email || !password) {
     return res.status(400).json({ message: 'Champs obligatoires manquants' });
   }
@@ -42,7 +42,7 @@ async function register(req, res) {
       password_hash,
       role: userRole,
       account_status: 'PENDING',
-      group_id: null
+      group_id: userRole === 'TRAINEE' ? (group_id || null) : null
     });
 
     return res.status(201).json({

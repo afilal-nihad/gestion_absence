@@ -144,7 +144,6 @@ function AdminAttendancePage() {
         <form onSubmit={handleSubmit}>
           <div className="grid-2">
             <div>
-              <h3>1. {t('attendance.step1') || 'Sélectionner la session'}</h3>
               <div className="form-row">
                 <label>
                   {t('attendance.filters.date')}
@@ -155,8 +154,7 @@ function AdminAttendancePage() {
                   <select
                     value={selectedGroup}
                     onChange={(e) => setSelectedGroup(e.target.value)}
-                    required={user?.role === 'ADMIN'}
-                    disabled={user?.role === 'TRAINER'}
+                    required={user?.role === 'ADMIN' || user?.role === 'TRAINER'}
                   >
                     <option value="">{t('attendance.filters.selectGroup')}</option>
                     {groups.map((g) => (
@@ -187,7 +185,6 @@ function AdminAttendancePage() {
             </div>
 
             <div>
-              <h3>2. {t('attendance.step2') || 'Action de présence'}</h3>
               <div className="form-row" style={{ alignItems: 'flex-end' }}>
                 <label>
                   {t('attendance.table.status')}
@@ -223,7 +220,7 @@ function AdminAttendancePage() {
 
       {trainees.length > 0 && (
         <div className="card mt-lg">
-          <h3>3. {t('attendance.step3') || 'Sélectionner les stagiaires'}</h3>
+          <h3>{t('attendance.step3') || 'Sélectionner les stagiaires'}</h3>
           <div className="attendance-table-wrapper">
             <table className="data-table">
               <thead>

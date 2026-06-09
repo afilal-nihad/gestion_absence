@@ -1,6 +1,17 @@
 // Contrôleur des groupes
 const Group = require('../models/Group');
 
+// GET /api/groups/public
+async function listPublicGroups(req, res) {
+  try {
+    const groups = await Group.findAllGroups();
+    res.json(groups.map(g => ({ id: g.id, name: g.name })));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+}
+
 // GET /api/groups
 async function listGroups(req, res) {
   try {
@@ -58,6 +69,7 @@ async function deleteGroup(req, res) {
 }
 
 module.exports = {
+  listPublicGroups,
   listGroups,
   createGroup,
   updateGroup,

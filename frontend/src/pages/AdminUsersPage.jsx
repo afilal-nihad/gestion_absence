@@ -28,7 +28,7 @@ function AdminUsersPage() {
     setLoading(true);
     try {
       const [tData, gData] = await Promise.all([
-        api.get('/users', token),
+        api.get(canManage ? '/users' : '/users/trainees', token),
         api.get('/groups', token)
       ]);
       setTrainees(tData);
@@ -148,7 +148,7 @@ function AdminUsersPage() {
   return (
     <div className="page">
       <h1>{t('trainees.title')}</h1>
-      <div className="grid-2">
+      <div className={canManage ? "grid-2" : ""}>
         <div>
           <h2>{t('trainees.listTitle')}</h2>
           {loading ? (

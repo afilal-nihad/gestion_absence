@@ -106,13 +106,27 @@ function AdminGroupsPage() {
   const columns = [
     { key: 'name', label: t('groups.columns.name') },
     { key: 'description', label: t('groups.columns.description') },
-    { key: 'trainee_count', label: t('groups.columns.traineeCount') }
+    { key: 'trainee_count', label: t('groups.columns.traineeCount') },
+    { 
+      key: 'trainer_ids', 
+      label: 'Formateurs', 
+      render: (val) => {
+        if (!val || val.length === 0) return '0';
+        if (trainers.length === 0) return val.length;
+        const names = val.map(id => {
+          const t = trainers.find(tr => tr.id === id);
+          return t ? `${t.first_name} ${t.last_name}` : '';
+        }).filter(Boolean);
+        if (names.length === 0) return val.length;
+        return `${val.length} (${names.join(', ')})`;
+      }
+    }
   ];
 
   return (
     <div className="page">
       <h1>{t('groups.title')}</h1>
-      <div className="grid-2">
+      <div className={canManage ? "grid-2" : ""}>
         <div>
           <h2>{t('groups.listTitle')}</h2>
           {loading ? (
