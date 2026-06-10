@@ -98,7 +98,7 @@ function RegisterPage() {
             />
           </label>
           <label>
-            {t('common.role') || 'Role'}
+            {t('role') || 'Role'}
             <select value={role} onChange={(e) => setRole(e.target.value)}>
               <option value="TRAINEE">{t('common.roles.TRAINEE') || 'Trainee'}</option>
               <option value="TRAINER">{t('common.roles.TRAINER') || 'Trainer'}</option>

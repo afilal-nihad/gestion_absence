@@ -136,7 +136,7 @@ function AdminUsersPage() {
     { key: 'last_name', label: t('trainees.columns.lastName') },
     { key: 'first_name', label: t('trainees.columns.firstName') },
     { key: 'email', label: t('trainees.columns.email') },
-    { key: 'role', label: t('common.role') || 'Role', render: (val) => t(`common.roles.${val}`) || val },
+    { key: 'role', label: t('role') || 'Role', render: (val) => t(`common.roles.${val}`) || val },
     { key: 'group_name', label: t('trainees.columns.group') },
     {
       key: 'access_status',
@@ -211,7 +211,7 @@ function AdminUsersPage() {
                 />
               </label>
               <label>
-                {t('common.role') || 'Role'}
+                {t('role') || 'Role'}
                 <select name="role" value={form.role} onChange={handleChange}>
                   <option value="TRAINEE">{t('common.roles.TRAINEE') || 'Trainee'}</option>
                   <option value="TRAINER">{t('common.roles.TRAINER') || 'Trainer'}</option>
